@@ -1,4 +1,5 @@
- array with a getter of a random value.
+/**
+ * An array with a getter of a random value.
  * @public 
  */
 
