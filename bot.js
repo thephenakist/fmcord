@@ -23,7 +23,9 @@ if (process.platform === `win32`) {
 app.get(`/`, (request, response) => {
   response.sendResponse(200);
 });
+
 app.listen(process.env.PORT);
+
 setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
 }, 280000);
