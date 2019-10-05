@@ -6,3 +6,4 @@ shrinkwrap.yaml
 watch.json
 yarn.lock
 .vscode/*
+.env
