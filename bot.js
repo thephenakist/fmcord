@@ -8,26 +8,6 @@ const canvas = require(`canvas`);
 
 const app = express();
 
-// init Spotify API wrapper
-
-const SpotifyWebApi = require(`spotify-web-api-node`);
-
-const spotifyApi = new SpotifyWebApi({
-  clientId : process.env.SPOTIFY_CLIENT_ID,
-  clientSecret : process.env.SPOTIFY_CLIENT_SECRET,
-});
-
-
-function success(data){
-  spotifyApi.setAccessToken(data.body[`access_token`]);
-}
-function failure(err){
-  console.log(`Something went wrong when retrieving an access token`, err.message);
-}
-const promise = spotifyApi.clientCredentialsGrant();
-promise.then(success, failure);
-
-
 if (process.platform === `win32`) {
   process.env.PWD = process.cwd();
   // NOTE: Inconsolata font is not as good at covering non-ASCII symbols as Noto Sans is. 
