@@ -17,13 +17,14 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret : process.env.SPOTIFY_CLIENT_SECRET,
 });
 
-spotifyApi.clientCredentialsGrant()
-  .then(function(data) {
-    // Save the access token so that it's used in future calls
-    spotifyApi.setAccessToken(data.body['access_token']);
+
+
+spotifyApi.clientCredentialsGrant();
+promise.then(function(data) {
+    spotifyApi.setAccessToken(data.body[`access_token`]);
   }, function(err) {
-    console.log('Something went wrong when retrieving an access token', err.message);
-  });
+    console.log(`Something went wrong when retrieving an access token`, err.message);
+});
 
 if (process.platform === `win32`) {
   process.env.PWD = process.cwd();
