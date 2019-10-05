@@ -83,15 +83,13 @@ class ImLuckyCommand extends Command {
       }
 
       function searchSuccess(data){
-        // data.body
-        embed.addField(`Spotify`, `Test`);
+        embed.addField(`Spotify`, data.body);
       }
       function searchFailure(err) {
       }
-      const search = spotifyApi.searchTracks(`track:`+track.name);
+      const search = spotifyApi.searchTracks(`track:${name}`);
       search.then(searchSuccess, searchFailure);
 
-      embed.addField(`Test`, `Test`);
       await message.channel.send(embed);
       return this.context;
     } catch (e) {
