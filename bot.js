@@ -21,7 +21,7 @@ if (process.platform === `win32`) {
 }
 
 app.get(`/`, (request, response) => {
-  response.sendResponse(200);
+  response.sendStatus(200);
 });
 
 app.listen(process.env.PORT);
