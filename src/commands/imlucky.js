@@ -61,6 +61,7 @@ class ImLuckyCommand extends Command {
           embed.setThumbnail(album.image[1][`#text`]);
         }
       }
+      
       embed.addField(`Listens by ${username.lastFM}`, track.playcount, true);
       if (toptags.tag.length > 0) {
         embed.addField(`Tags`, toptags.tag.map(x => `[${x.name}](${x.url})`).join(` - `), true);
