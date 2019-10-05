@@ -21,7 +21,7 @@ if (process.platform === `win32`) {
 }
 
 app.get(`/`, (request, response) => {
-  response.send(process.env.PROJECT_DOMAIN);
+  response.sendResponse(200);
 });
 app.listen(process.env.PORT);
 setInterval(() => {
