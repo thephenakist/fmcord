@@ -93,8 +93,8 @@ class ImLuckyCommand extends Command {
       const search = spotifyApi.searchTracks(`track:${name}`);
       search.then(searchSuccess, searchFailure);
       */
-      const result = spotifyApi.searchTracks(`track:${name}`);
-      result.then((data){embed.addField(`Spotify`, `${data}`)});
+      //const result = spotifyApi.searchTracks(`track:${name}`);
+      //result.then(embed.addField(`Spotify`, `${response}`));
       await message.channel.send(embed);
       return this.context;
     } catch (e) {
