@@ -86,6 +86,7 @@ class ImLuckyCommand extends Command {
         embed.addField(`Spotify`, data.body);
       }
       function searchFailure(err) {
+        embed.addField(`Spotify`, `No`);
       }
       const search = spotifyApi.searchTracks(`track:${name}`);
       search.then(searchSuccess, searchFailure);
