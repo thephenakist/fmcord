@@ -68,9 +68,9 @@ class ImLuckyCommand extends Command {
       
       const spotify_search = await client.spotify.searchTracks(`${artist.name} ${name}`);
       //if(spotifyQuery.length > 0){
-      console.log(spotify_search);
-      // const spotify_url = 
-      //embed.addField(`Spotify`, `[$sp`)
+      const spotify_url = spotify_search.body.tracks.items[0].external_urls.spotify;
+      console.log(spotify_url);
+      embed.addField(`Spotify`, `[${spotify_url}](${spotify_url})`, true);
       //}
       // spotifyQuery
       //   .then(function(data){
