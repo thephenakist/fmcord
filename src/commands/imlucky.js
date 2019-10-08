@@ -74,13 +74,13 @@ class ImLuckyCommand extends Command {
           .then(function(data){
             spotify_url = data.body.tracks.items[0].external_urls.spotify;
             console.log(`Spotify Url: ${spotify_url}`);
-            //embed.addField(`Spotify`, `[${spotify_url](${spotify_url})`, true);
+            embed.addField(`Spotify`, `[${spotify_url}](${spotify_url})`, true);
           })
           .catch(function(err){
             console.log(err.message);
           });
       
-        embed.addField(`Spotify`, `[${spotify_url}]($spotify_url})`, true);
+        //embed.addField(`Spotify`, `[${spotify_url}]($spotify_url})`, true);
       
       }
 
