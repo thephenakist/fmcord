@@ -67,16 +67,16 @@ class ImLuckyCommand extends Command {
       }
       
       //embed.addField(`Spotify`, `[link](http://google.com)`, true);
-      
-      const spotifyQuery = client.spotify.searchTracks(`${artist.name} ${name}`);
-      spotifyQuery
+      let spotify_url
+      try{
+        spotifyQuery = client.spotify.searchTracks(`${artist.name} ${name}`);
+        spotifyQuery
         .then(function(data){
           console.log(data.body.tracks.items[0].external_urls.spotify);
           embed.addField(`Spotify`, `${data.body.tracks.items[0].external_urls.spotify}`, true);
         })
-      .catch(function(err){
-          console.log(err.message);
-        });
+      } catch(err){
+}
 
       await message.channel.send(embed);
       return this.context;
