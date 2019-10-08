@@ -69,6 +69,9 @@ class ImLuckyCommand extends Command {
       if (toptags.tag.length > 0) {
         embed.addField(`Tags`, toptags.tag.map(x => `[${x.name}](${x.url})`).join(` - `), true);
       }
+      /*
+
+      */
       await message.channel.send(embed);
       return this.context;
     } catch (e) {

@@ -39,29 +39,26 @@ const sequelize = new Sequelize(`database`, `user`, `password`, {
   storage: `.data/database.sqlite`
 });
 
-/*
+
 const SpotifyWebAPI = require(`spotify-web-api-node`);
 
-const spotifyApi = new SpotifyWebApi({
+const spotifyApi = new SpotifyWebAPI({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET
 });
-async function storeToken(data){
-  console.log(`Spotify auth token: `+data.body[`access_token`]);
-  await spotifyApi.setAccessToken(data.body[`access_token`]);
+
+
+try{
+  spotifyAuth = spotifyApi.clientCredentialsGrant()
+    .then(function(data){
+      spotifyApi.setAccessToken(data.body[`access_token`]);
+    }, function(err){
+      console.log(err.message);
+    });
+} catch{
+  console.log(`Oops`);
 }
-async function authFailure(data){
-  await console.log(`Spotify auth fail`);
-}
-let spotifyAuth = spotifyApi.clientCredentialsGrant()
-  .then(
-    function(data){
-      await spotifyApi.setAccessToken(data.body[`access_token`]);
-  },
-    function(err){
-  console.log(err.message);
-});
-*/
+
 
 const client = new Client({
   disableEveryone: true
@@ -70,6 +67,7 @@ client.config = config;
 client.commands = new Collection();
 client.cooldowns = [];
 client.sequelize = sequelize;
+client.spotify = spotifyApi;
 client.snippets = require(`./snippets.js`);
 client.executing = new Set();
 
