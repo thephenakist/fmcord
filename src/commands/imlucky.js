@@ -68,11 +68,10 @@ class ImLuckyCommand extends Command {
       
       const spotify_search = await client.spotify.searchTracks(`${artist.name} ${name}`);
       const spotify_url = spotify_search.body.tracks.items[0].external_urls.spotify;
-      //console.log(spotify_url);
       //embed.addField(`Spotify`, `[${spotify_url}](${spotify_url})`, true);
 
       await message.channel.send(embed);
-      //await message.channel.send(spotify_search.body.tracks.items[0].preview_url);
+      // preview url: spotify_search.body.tracks.items[0].preview_url;
       await message.channel.send(spotify_url);
       return this.context;
     } catch (e) {
