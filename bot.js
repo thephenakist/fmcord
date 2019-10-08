@@ -39,6 +39,8 @@ const sequelize = new Sequelize(`database`, `user`, `password`, {
   storage: `.data/database.sqlite`
 });
 
+
+
 const client = new Client({
   disableEveryone: true
 });

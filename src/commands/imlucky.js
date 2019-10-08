@@ -25,10 +25,6 @@ class ImLuckyCommand extends Command {
   }
 
   async run(client, message) {
-    const spotifyApi = new SpotifyWebApi({
-      clientId : process.env.SPOTIFY_CLIENT_ID,
-      clientSecret : process.env.SPOTIFY_CLIENT_SECRET
-    });
     /*
     function success(data){
       spotifyApi.setAccessToken(data.body[`access_token`]);
