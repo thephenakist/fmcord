@@ -71,9 +71,9 @@ class ImLuckyCommand extends Command {
       }
       
       try{
-        const spotifyQuery = client.spotify.searchTracks(`artist:${artist.name}&track:${name}`)
+        const spotifyQuery = client.spotify.searchTracks(`${artist.name} ${name}`)
           .then(function(data){
-            console.log(data.body);
+            console.log(data.body.tracks.items[0]);
             embed.addField(`Spotify`, data.body.tracks.items[0].external_urls.spotify);
           }, function(err){
             console.log(err.message);
