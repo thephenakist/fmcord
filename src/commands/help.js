@@ -38,8 +38,10 @@ class HelpCommand extends Command {
       const color = message.guild ? message.member.displayColor : 16777215;
       const helpCommands = client.commands
         .map(Cmd => new Cmd())
-        .filter(x => !x.helpExempt)
-        .filter(x => disabledCmds.indexOf(x.name) === -1);
+        .filter(x => !x.helpExempt);
+      if (message.author.id !== client.config.botOwnerID){
+        helpCommands.filter(x => disabledCmds.indexOf(x.name) === -1);
+      }
       console.log(helpCommands);
       if (args[0] === `--manual`) {
         if (message.guild && !message.guild.me.hasPermission(`ADD_REACTIONS`, false, true, true)) {
