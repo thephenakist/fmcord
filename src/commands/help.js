@@ -26,20 +26,20 @@ class HelpCommand extends Command {
     this.setContext(message);
     try {
       const Disables = client.sequelize.import(`../models/Disables.js`);
+      const disabledCmds = await Disables.findAll({
+        attributes: [`cmdName`],
+        where: {
+          discordID: {
+            [Op.or]: [message.guild.id, message.channel.id]
+          }
+        },
+        raw: true
+      }).map(x => x.cmdName);
       const color = message.guild ? message.member.displayColor : 16777215;
       const helpCommands = client.commands
         .map(Cmd => new Cmd())
-        .filter(x => !x.helpExempt);
-      /*
-        const isDisabled = await Disables.findOne({
-          where: {
-            discordID: {
-              [Op.or]: [message.guild.id, message.channel.id]
-            },
-            cmdName: args[0].toLowerCase()
-          }
-        });
-      */
+        .filter(x => !x.helpExempt)
+        .filter(x => disabledCmds.indexOf(x.name) === -1);
       console.log(helpCommands);
       if (args[0] === `--manual`) {
         if (message.guild && !message.guild.me.hasPermission(`ADD_REACTIONS`, false, true, true)) {
@@ -86,17 +86,7 @@ class HelpCommand extends Command {
       } else {
         const commandName = args[0];
         if (!commandName) {
-          const disabledList = await Disables.findAll({
-            attributes: [`cmdName`],
-            where: {
-              discordID: {
-                [Op.or]: [message.guild.id, message.channel.id]
-              }
-            },
-            raw: true
-          }).map(x => x.cmdName);
-          const filteredCommands = helpCommands.filter(x => disabledList.indexOf(x.name) === -1);
-          const commands = filteredCommands
+          const commands = helpCommands
             .map(x => `\`${x.name}\``)
             .join(`, `);
           console.log(commands);
@@ -111,18 +101,10 @@ class HelpCommand extends Command {
             .setTimestamp();
           await message.channel.send({ embed });
         } else {
-          const isDisabled = await Disables.findOne({
-            where: {
-              discordID: {
-                [Op.or]: [message.guild.id, message.channel.id]
-              },
-              cmdName: args[0].toLowerCase()
-            }
-          });
           const command = helpCommands.find(com => {
             return com.name === commandName || com.aliases.includes(commandName);
           });
-          if (!command || isDisabled) {
+          if (!command) {
             await message.reply(`I couldn't find a command, called \`${commandName}\`.`);
             this.context.reason = `Couldn't find the command.`;
             throw this.context;
