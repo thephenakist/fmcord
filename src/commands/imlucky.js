@@ -3,10 +3,6 @@ const FMcordEmbed = require(`../utils/FMcordEmbed`);
 const Library = require(`../lib/index`);
 const List = require(`../classes/List`);
 
-// init Spotify API wrapper
-
-const SpotifyWebApi = require(`spotify-web-api-node`);
-
 const removeParens = str => str
   .replace(`(`, `%28`)
   .replace(`)`, `%29`)
@@ -72,10 +68,13 @@ class ImLuckyCommand extends Command {
       
       //embed.addField(`Spotify`, `[link](http://google.com)`, true);
       
-      const spotifyQuery = client.spotify.searchTracks(`${artist.name} ${name}`)
+      const spotifyQuery = client.spotify.searchTracks(`${artist.name} ${name}`);
+      spotifyQuery
         .then(function(data){
+          console.log(data.body.tracks.items[0].external_urls.spotify);
           embed.addField(`Spotify`, `${data.body.tracks.items[0].external_urls.spotify}`, true);
-        }, function(err){
+        })
+      .catch(function(err){
           console.log(err.message);
         });
 
