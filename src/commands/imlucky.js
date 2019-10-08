@@ -66,25 +66,21 @@ class ImLuckyCommand extends Command {
         embed.addField(`Tags`, toptags.tag.map(x => `[${x.name}](${x.url})`).join(` - `), true);
       }
       
-      //embed.addField(`Spotify`, `[link](http://google.com)`, true);
-      function get_spotify(embed){
-        let spotify_url;
-        const spotifyQuery = client.spotify.searchTracks(`${artist.name} ${name}`);
-        spotifyQuery
-          .then(function(data){
-            spotify_url = data.body.tracks.items[0].external_urls.spotify;
-            console.log(`Spotify Url: ${spotify_url}`);
-            embed.addField(`Spotify`, `[${spotify_url}](${spotify_url})`, true);
-          })
-          .catch(function(err){
-            console.log(err.message);
-          });
-      
-        //embed.addField(`Spotify`, `[${spotify_url}]($spotify_url})`, true);
-      
-      }
-
-      await get_spotify(embed);
+      const spotify_search = await client.spotify.searchTracks(`${artist.name} ${name}`);
+      //if(spotifyQuery.length > 0){
+      console.log(spotify_search);
+      // const spotify_url = 
+      //embed.addField(`Spotify`, `[$sp`)
+      //}
+      // spotifyQuery
+      //   .then(function(data){
+      //     spotify_url = data.body.tracks.items[0].external_urls.spotify;
+      //     console.log(`Spotify Url: ${spotify_url}`);
+      //     embed.addField(`Spotify`, `[${spotify_url}](${spotify_url})`, true);
+      //   })
+      //   .catch(function(err){
+      //     console.log(err.message);
+      //   });
 
       await message.channel.send(embed);
       return this.context;
