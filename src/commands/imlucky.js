@@ -25,16 +25,6 @@ class ImLuckyCommand extends Command {
   }
 
   async run(client, message) {
-    /*
-    function success(data){
-      spotifyApi.setAccessToken(data.body[`access_token`]);
-    }
-    function failure(err){
-      console.log(`Something went wrong when retrieving an access token`, err.message);
-    }
-    const promise = spotifyApi.clientCredentialsGrant();
-    promise.then(success, failure);
-    */
     this.setContext(message);
     try {
       const lib = new Library(client.config.lastFM.apikey);
@@ -79,18 +69,6 @@ class ImLuckyCommand extends Command {
       if (toptags.tag.length > 0) {
         embed.addField(`Tags`, toptags.tag.map(x => `[${x.name}](${x.url})`).join(` - `), true);
       }
-      /*
-      function searchSuccess(data){
-        embed.addField(`Spotify`, data.body);
-      }
-      function searchFailure(err) {
-        embed.addField(`Spotify`, `No`);
-      }
-      const search = spotifyApi.searchTracks(`track:${name}`);
-      search.then(searchSuccess, searchFailure);
-      */
-      //const result = spotifyApi.searchTracks(`track:${name}`);
-      //result.then(embed.addField(`Spotify`, `${response}`));
       await message.channel.send(embed);
       return this.context;
     } catch (e) {

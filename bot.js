@@ -39,7 +39,19 @@ const sequelize = new Sequelize(`database`, `user`, `password`, {
   storage: `.data/database.sqlite`
 });
 
+const SpotifyWebAPI = require(`spotify-web-api-node`);
 
+/*
+const spotifyApi = new SpotifyWebApi({
+clientId: process.env.SPOTIFY_CLIENT_ID,
+clientSecret: process.env.SPOTIFY_CLIENT_SECRET
+});
+function storeToken(data){
+spotifyApi.setAccessToken()
+}
+const spotifyAuth = spotifyApi.clientCredentialsGrant();
+spotifyAuth.then(storeToken, authFailure);
+*/
 
 const client = new Client({
   disableEveryone: true
