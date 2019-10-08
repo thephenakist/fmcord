@@ -69,19 +69,22 @@ class ImLuckyCommand extends Command {
       if (toptags.tag.length > 0) {
         embed.addField(`Tags`, toptags.tag.map(x => `[${x.name}](${x.url})`).join(` - `), true);
       }
-      
+      let spotify_url = undefined;
       try{
         const spotifyQuery = client.spotify.searchTracks(`${artist.name} ${name}`)
           .then(function(data){
-            console.log(data.body.tracks.items[0]);
-            embed.addField(`Spotify`, data.body.tracks.items[0].external_urls.spotify);
+            console.log(data.body.tracks.items[0].external_urls.spotify);
+            spotify_url = data.body.tracks.items[0].external_urls.spotify;
           }, function(err){
             console.log(err.message);
           });
       } catch{
         console.log(`Oops`);
       }
-      
+      if(spotify_url){
+        embed.addField(`Spotify`, `[${spotify_url}](${removeParens(spotify_url)})`, true);
+      }
+
       await message.channel.send(embed);
       return this.context;
     } catch (e) {
