@@ -1,5 +1,5 @@
 const Command = require(`../classes/Command`);
-const fetchtrack = require(`../util/fetchtrack.js`);
+const { fetchtrack } = require(`../utils/fetchtrack`);
 
 class SpotifyCommand extends Command {
 
@@ -18,7 +18,7 @@ class SpotifyCommand extends Command {
     try {
       if (args.length > 0) {
         const track = await client.spotify.searchTracks(args.join(` `));
-        await message.channel.send(track.tracks.items[0].external_urls.spotify);
+        await message.channel.send(track.body.tracks.items[0].external_urls.spotify);
       } else {
         const fetchTrack = new fetchtrack(client, message);
         let song = await fetchTrack.getcurrenttrack();
@@ -26,7 +26,7 @@ class SpotifyCommand extends Command {
           song = await fetchTrack.getlasttrack();
         }
         const track = await client.spotify.searchTracks(`${song.artist[`#text`]} ${song.name}`);
-        await message.channel.send(track.tracks.items[0].external_urls.spotify);
+        await message.channel.send(track.body.tracks.items[0].external_urls.spotify);
       }
       return this.context;
     } catch (e) {
