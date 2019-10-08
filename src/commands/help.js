@@ -1,6 +1,7 @@
 const Command = require(`../classes/Command`);
 const { RichEmbed } = require(`discord.js`);
 const ReactionInterface = require(`../utils/ReactionInterface`);
+const { Op } = require(`sequelize`);
 
 class HelpCommand extends Command {
 
@@ -24,10 +25,22 @@ class HelpCommand extends Command {
   async run(client, message, args) {
     this.setContext(message);
     try {
+      const Disables = client.sequelize.import(`../models/Disables.js`);
       const color = message.guild ? message.member.displayColor : 16777215;
       const helpCommands = client.commands
         .map(Cmd => new Cmd())
         .filter(x => !x.helpExempt);
+      /*
+        const isDisabled = await Disables.findOne({
+          where: {
+            discordID: {
+              [Op.or]: [message.guild.id, message.channel.id]
+            },
+            cmdName: args[0].toLowerCase()
+          }
+        });
+      */
+      console.log(helpCommands);
       if (args[0] === `--manual`) {
         if (message.guild && !message.guild.me.hasPermission(`ADD_REACTIONS`, false, true, true)) {
           await message.reply(`I do not have an \`Add reactions\` permission ` +
@@ -73,9 +86,20 @@ class HelpCommand extends Command {
       } else {
         const commandName = args[0];
         if (!commandName) {
-          const commands = helpCommands
+          const disabledList = await Disables.findAll({
+            attributes: [`cmdName`],
+            where: {
+              discordID: {
+                [Op.or]: [message.guild.id, message.channel.id]
+              }
+            },
+            raw: true
+          }).map(x => x.cmdName);
+          const filteredCommands = helpCommands.filter(x => disabledList.indexOf(x.name) === -1);
+          const commands = filteredCommands
             .map(x => `\`${x.name}\``)
             .join(`, `);
+          console.log(commands);
           const embed = new RichEmbed()
             .setTitle(`FMcord's commands`)
             .setThumbnail(client.user.avatarURL)
@@ -87,10 +111,18 @@ class HelpCommand extends Command {
             .setTimestamp();
           await message.channel.send({ embed });
         } else {
+          const isDisabled = await Disables.findOne({
+            where: {
+              discordID: {
+                [Op.or]: [message.guild.id, message.channel.id]
+              },
+              cmdName: args[0].toLowerCase()
+            }
+          });
           const command = helpCommands.find(com => {
             return com.name === commandName || com.aliases.includes(commandName);
           });
-          if (!command) {
+          if (!command || isDisabled) {
             await message.reply(`I couldn't find a command, called \`${commandName}\`.`);
             this.context.reason = `Couldn't find the command.`;
             throw this.context;
