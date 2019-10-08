@@ -70,11 +70,11 @@ class ImLuckyCommand extends Command {
         embed.addField(`Tags`, toptags.tag.map(x => `[${x.name}](${x.url})`).join(` - `), true);
       }
       
-      embed.addField(`Spotify`, `[link](http://google.com)`, true);
+      //embed.addField(`Spotify`, `[link](http://google.com)`, true);
       
       const spotifyQuery = client.spotify.searchTracks(`${artist.name} ${name}`)
         .then(function(data){
-          embed.addField(`Spotify`, `[${data.body.tracks.items[0].external_urls.spotify}](link)`, true);
+          embed.addField(`Spotify`, `${data.body.tracks.items[0].external_urls.spotify}`, true);
         }, function(err){
           console.log(err.message);
         });
