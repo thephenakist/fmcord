@@ -1,4 +1,5 @@
 const Command = require(`../classes/Command`);
+const Spotify = require(`../lib/spotify/index`);
 const { fetchtrack } = require(`../utils/fetchtrack`);
 
 class SpotifyCommand extends Command {
@@ -16,17 +17,26 @@ class SpotifyCommand extends Command {
   async run(client, message, args) {
     this.setContext(message);
     try {
+      const { spotify } = client.config;
+      if (!spotify || !spotify.id || !spotify.secret) {
+        await message.reply(`some of the Spotify API credentials are missing, ` +
+        `therefore, this command cannot be used. Please contact the maintainer ` +
+        `of this bot.`);
+        this.context.reason = `Spotify credentials are missing.`;
+        throw this.context;
+      }
+      const lib = new Spotify(spotify.id, spotify.secret);
       if (args.length > 0) {
-        const track = await client.spotify.searchTracks(args.join(` `));
-        await message.channel.send(track.body.tracks.items[0].external_urls.spotify);
+        const track = await lib.findTrack(args.join(` `));
+        await message.channel.send(track.tracks.items[0].external_urls.spotify);
       } else {
         const fetchTrack = new fetchtrack(client, message);
         let song = await fetchTrack.getcurrenttrack();
         if (!song) {
           song = await fetchTrack.getlasttrack();
         }
-        const track = await client.spotify.searchTracks(`${song.artist[`#text`]} ${song.name}`);
-        await message.channel.send(track.body.tracks.items[0].external_urls.spotify);
+        const track = await lib.findTrack(`${song.artist[`#text`]} ${song.name}`);
+        await message.channel.send(track.tracks.items[0].external_urls.spotify);
       }
       return this.context;
     } catch (e) {

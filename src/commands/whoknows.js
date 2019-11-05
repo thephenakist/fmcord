@@ -3,7 +3,7 @@ const { RichEmbed } = require(`discord.js`);
 const { fetchuser } = require(`../utils/fetchuser`);
 const { fetchtrack } = require(`../utils/fetchtrack`);
 const { Op } = require(`sequelize`);
-const Library = require(`../lib/index.js`);
+const Library = require(`../lib/lastfm/index.js`);
 const ReactionInterface = require(`../utils/ReactionInterface`);
 
 const sortingFunc = (a, b) => parseInt(b.plays) - parseInt(a.plays);

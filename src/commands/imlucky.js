@@ -1,7 +1,8 @@
 const Command = require(`../classes/Command`);
 const FMcordEmbed = require(`../utils/FMcordEmbed`);
-const Library = require(`../lib/index`);
+const Library = require(`../lib/lastfm/index`);
 const List = require(`../classes/List`);
+const Spotify = require(`../lib/spotify/index`);
 
 const removeParens = str => str
   .replace(`(`, `%28`)
@@ -14,7 +15,7 @@ class ImLuckyCommand extends Command {
   constructor() {
     super({
       name: `imlucky`,
-      description: `Gets a random song from a random user's top 50 songs.`,
+      description: `Gets a random song from a random user's top 15 songs.`,
       usage: [`imlucky`],
       aliases: [`i`],
     });
@@ -23,6 +24,15 @@ class ImLuckyCommand extends Command {
   async run(client, message) {
     this.setContext(message);
     try {
+      const { spotify } = client.config;
+      if (!spotify || !spotify.id || !spotify.secret) {
+        await message.reply(`some of the Spotify API credentials are missing, ` +
+        `therefore, this command cannot be used. Please contact the maintainer ` +
+        `of this bot.`);
+        this.context.reason = `Spotify credentials are missing.`;
+        throw this.context;
+      }
+      const spotlib = new Spotify(spotify.id, spotify.secret);
       const lib = new Library(client.config.lastFM.apikey);
       const Users = client.sequelize.import(`../models/Users.js`);
       const users = await Users.findAll({
@@ -65,14 +75,15 @@ class ImLuckyCommand extends Command {
       if (toptags.tag.length > 0) {
         embed.addField(`Tags`, toptags.tag.map(x => `[${x.name}](${x.url})`).join(` - `), true);
       }
-      
-      const spotify_search = await client.spotify.searchTracks(`${artist.name} ${name}`);
-      const spotify_url = spotify_search.body.tracks.items[0].external_urls.spotify;
-      //embed.addField(`Spotify`, `[${spotify_url}](${spotify_url})`, true);
-
       await message.channel.send(embed);
-      // preview url: spotify_search.body.tracks.items[0].preview_url;
-      await message.channel.send(spotify_url);
+
+      const spotify_track = await spotlib.findTrack(`${artist.name} ${name}`);
+      try{
+        await message.channel.send(spotify_track.tracks.items[0].external_urls.spotify);
+        // preview url: spotify_track.tracks.items[0].preview_url;
+      } catch (e) {
+        await message.channel.send('This track could not be found on Spotify.');
+      }
       return this.context;
     } catch (e) {
       this.context.stack = e.stack;

@@ -1,5 +1,5 @@
 const Command = require(`../classes/Command`);
-const Library = require(`../lib/index.js`);
+const Library = require(`../lib/lastfm/index.js`);
 const { RichEmbed } = require(`discord.js`);
 const { fetchuser } = require(`../utils/fetchuser`);
 const { fetchtrack } = require(`../utils/fetchtrack`);
@@ -45,6 +45,9 @@ class NowPlayingCommand extends Command {
               `of ${userData.user.playcount} scrobbles.`)
             .setTimestamp();
           await message.channel.send({ embed });
+          const spotify_search = await client.spotify.searchTracks(`${track.artist[`#text`]} ${track.name}`);
+          const spotify_url = spotify_search.body.tracks.items[0].external_urls.spotify;
+          await message.channel.send(spotify_url);
           return this.context;
         } else {
           await message.reply(client.snippets.notPlaying);

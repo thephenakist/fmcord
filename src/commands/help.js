@@ -36,13 +36,12 @@ class HelpCommand extends Command {
         raw: true
       }).map(x => x.cmdName);
       const color = message.guild ? message.member.displayColor : 16777215;
-      const helpCommands = client.commands
+      let helpCommands = client.commands
         .map(Cmd => new Cmd())
         .filter(x => !x.helpExempt);
       if (message.author.id !== client.config.botOwnerID){
-        helpCommands.filter(x => disabledCmds.indexOf(x.name) === -1);
+        helpCommands = helpCommands.filter(x => disabledCmds.indexOf(x.name) === -1);
       }
-      console.log(helpCommands);
       if (args[0] === `--manual`) {
         if (message.guild && !message.guild.me.hasPermission(`ADD_REACTIONS`, false, true, true)) {
           await message.reply(`I do not have an \`Add reactions\` permission ` +
@@ -91,7 +90,6 @@ class HelpCommand extends Command {
           const commands = helpCommands
             .map(x => `\`${x.name}\``)
             .join(`, `);
-          console.log(commands);
           const embed = new RichEmbed()
             .setTitle(`FMcord's commands`)
             .setThumbnail(client.user.avatarURL)

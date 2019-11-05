@@ -5,7 +5,6 @@ const DBL = require(`dblapi.js`);
 const { Client, Collection } = require(`discord.js`);
 const config = require(`./config.json`);
 const canvas = require(`canvas`);
-const SpotifyWebAPI = require(`spotify-web-api-node`);
 
 const app = express();
 
@@ -29,7 +28,7 @@ app.listen(process.env.PORT);
 
 setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
-}, 280000);
+}, 120000);
 
 const Sequelize = require(`sequelize`);
 
@@ -40,24 +39,6 @@ const sequelize = new Sequelize(`database`, `user`, `password`, {
   storage: `.data/database.sqlite`
 });
 
-const spotifyApi = new SpotifyWebAPI({
-  clientId: process.env.SPOTIFY_CLIENT_ID,
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET
-});
-
-spotifyApi.clientCredentialsGrant().then(
-  function(data) {
-    console.log(`The access token expires in ` + data.body[`expires_in`]);
-    console.log(`The access token is ` + data.body[`access_token`]);
-
-    spotifyApi.setAccessToken(data.body[`access_token`]);
-  },
-  function(err) {
-    console.log(`Something went wrong when retrieving an access token`, err);
-  }
-);
-
-
 const client = new Client({
   disableEveryone: true
 });
@@ -65,7 +46,6 @@ client.config = config;
 client.commands = new Collection();
 client.cooldowns = [];
 client.sequelize = sequelize;
-client.spotify = spotifyApi;
 client.snippets = require(`./snippets.js`);
 client.executing = new Set();
 

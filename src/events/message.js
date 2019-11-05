@@ -135,6 +135,9 @@ module.exports = async (client, message) => {
       }
       if (e.stack) {
         log += `Stack: ${e.stack}\n`;
+        //if (e.stack.split(` `)[-1] === `500`){
+        //  await message.channel.send(`Last.fm's servers are having issues. Please try again later.`);
+        //}
         await message.channel.send(client.snippets.error);
       }
       console.error(log);

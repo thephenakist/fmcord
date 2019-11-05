@@ -1,6 +1,6 @@
 const Command = require(`../classes/Command`);
 const { fetchuser } = require(`../utils/fetchuser`);
-const Library = require(`../lib/index.js`);
+const Library = require(`../lib/lastfm/index.js`);
 const canvas = require(`canvas`);
 const allSettled = require(`../utils/polyfills/AllSettled`);
 
